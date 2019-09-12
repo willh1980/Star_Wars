@@ -1,0 +1,80 @@
+#header {
+    border: 2px solid black;
+    margin: auto;
+    height: 80px;
+    width: 270px;
+    background-color: antiquewhite;
+}
+
+#headtitle {
+    text-align: center;
+    font-size: 60px;
+    top: 10px;
+    font-weight: bold;
+}
+
+
+body {
+    background-image: url('../images/starwars.jpg');
+    
+    
+}
+
+#myGrid {
+    height: 140px;
+}
+
+#playerdiv {
+    height: 140px;
+}
+
+#challengerdiv {
+    height: 140px;
+    width: 600px;
+}
+
+
+.Characters {
+    display: inline-block;
+    border: 1px solid red;
+    background-color: white;
+    text-align: center;
+    width: 110px;
+    height: 140px;
+}
+
+#statusbox {
+    height: 46px;
+    width: 400px;
+    border: 1px solid yellow;
+    background-color: antiquewhite;
+    color: red;
+    font-size: 16px;
+   font-weight: bold
+}
+
+#statustext {
+    
+}
+
+#messagebox {
+    font-size: 24px;
+    color: black;
+    
+}
+
+#messagediv {
+    height: 30px;
+    width: 650px;
+    border: 1px solid black;
+    background-color: white
+}
+
+#restart {
+    font-size: 30px;
+    border: 1px solid black;
+}
+
+#buttondiv {
+    width: 600px;
+}

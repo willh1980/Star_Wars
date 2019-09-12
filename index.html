@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8" />
+
+        <link rel="stylesheet" type="text/css" href= "./assets/css/starwars.css">
+
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+        <title>Star Wars</title>
+    
+    </head>
+
+    <body>
+        <br>
+        <div id="header">
+            <span id="headtitle">Star Wars</span>
+        </div>
+        <br>
+        <br>
+        <div id="playerdiv"></div>
+        <br>
+        <div id=messagediv><span id="messagebox"></span> </div>
+        <br>
+        <div id="myGrid"></div>
+            <br>
+            <br>
+            <div id=buttondiv></div>
+            <br>
+            <br>
+            <div id="challengerdiv"></div>
+        
+    </body>
+
+    <script>
+       
+    var characters = [
+        {
+        name: "Chewbacca",
+        health: 120,
+        attack: 8,
+        imageUrl: "assets/images/chewbacca.jpeg",
+        enemyAttackBack: 15,
+        index: 0
+        },
+
+        {
+        name: "Darth-Vader",
+        health: 100,
+        attack: 14,
+        imageUrl: "assets/images/Darth_Vader.jpg",
+        enemyAttackBack: 5,
+        index: 1
+        },
+
+        {
+        name: "Hans-Solo",
+        health: 150,
+        attack: 8,
+        imageUrl: "assets/images/hansSolo.jpeg",
+        enemyAttackBack: 20,
+        index: 2
+        },
+
+        {
+        name: "Skywalker",
+        health: 180,
+        attack: 7,
+        imageUrl: "assets/images/luke-skywalker.jpeg",
+        enemyAttackBack: 25,
+        index: 3
+        },
+
+        ] ;
+
+        var attackMultiplyer = 0
+        var attackerLife = ""
+        var defenderLife = ""
+        var attackerAttack = ""
+        var defenderAttack = ""
+        var wins = 0
+        
+
+        var characterOutput = function(character, outputSpace, player) {
+                var characDiv = "<div class=Characters id=" + player + " data-name=" + character.name + " index=" + character.index + "></div>";
+                var characName = "<span class='character-name'>" + character.name + "</span>";
+                var characImage = "<img src='" + character.imageUrl + "'>";
+                var characPower = "<br><span class='lifepower' id='" + player + "-lifepower'>" + character.health + "</span>";
+                
+                $("#" + outputSpace).append(characDiv);
+                $("#" + player).append(characName);
+                $("#" + player).append(characImage);
+                $("#" + player).append(characPower);
+        }
+
+        
+        function restart(){
+            $("#playerdiv").empty()
+            $("#challengerdiv").empty()
+            for (i = 0; i < characters.length; i++){
+                characterOutput(characters[i], "myGrid", characters[i].name)
+            }
+            $("#messagebox").text("Hello Space fighter, select the player you'd like to use to compete.")
+            $("#buttondiv").html("<button id=attack>ATTACK</button>")
+
+            
+
+        }
+
+
+        restart();
+       
+            
+        $("#myGrid").on("click", ".Characters", function() {
+            
+            if( $("#playerdiv").is(':empty') ) {
+                var i = $(this).attr("index")
+                console.log(this)
+                characterOutput(characters[i], "playerdiv", "attacker")
+                var attackerName = $("#attacker").attr("data-name")
+                $(this).remove()
+                attackerAttack = characters[i].attack;
+                attackerLife = characters[i].health;
+                $("#messagebox").text(attackerName + " is a good choice. Pick someone to fight.")
+
+            }
+
+            else if($("#playerdiv").val() !== 0 && $("#challengerdiv").is(':empty')){
+                var x = $(this).attr("index")
+                characterOutput(characters[x], "challengerdiv", "defender");
+                $("#challengerdiv").append("<div class=Characters id=statusbox><p id=statustext></p></div>")
+                var defenderName = $("#defender").attr("data-name")
+                $(this).remove()
+                defenderAttack = characters[x].enemyAttackBack
+                defenderLife = characters[x].health
+                $("#messagebox").text("Alright, hit that attack button and take " + defenderName + " out!")
+
+            }
+
+            else if($("#playerdiv").val() !== 0 && $("#challengerdiv").val() !== 0){
+                return;
+            }
+       
+        })
+
+        $("#attack").on("click", function() {
+            var defenderName = $("#defender").attr("data-name")
+            console.log(wins)
+            
+            if(defenderLife > 0 && attackerLife >= 0){
+                attackMultiplyer++;
+                    
+                attackerLife = attackerLife - defenderAttack;
+                defenderLife = defenderLife - (attackerAttack * attackMultiplyer);
+                $("#statusbox").html(defenderName + " has attacked you for " + defenderAttack + " life points.<br>You attacked " + defenderName + " for " + (attackerAttack * attackMultiplyer) + " life points.")
+                    
+                $("#attacker-lifepower").text(attackerLife)
+                $("#defender-lifepower").text(defenderLife)
+
+                if(defenderLife < 0 && attackerLife >= 0 && wins <= 2) {
+                    $("#challengerdiv").empty()
+                    $("#messagebox").text("YESSS, you have defeated " + defenderName + "!!! Chose another fighter.")
+                    wins++;
+
+                    if(attackerLife >= 0 && wins > 2){
+                        $("#challengerdiv").empty()
+                        $("#messagebox").text("Congradulations, You are the Star Wars Champion!!!!")
+                        $("#challengerdiv").html("<button id=restart>RESTART</button>")
+                        $("#buttondiv").empty()
+                        $("#myGrid").empty()
+                        
+
+                        $("#restart").on("click", function(){
+                            window.location.reload()
+                        })
+                    }
+                    
+                }
+
+                else if(defenderLife >= 0 && attackerLife <= 0 && wins <= 2){
+                    $("#messagebox").text("Ooops, Looks like the Force isn't in you. Try another round!!!")
+                    $("#challengerdiv").empty();
+                    $("#playerdiv").html("<button id=restart>RESTART</button>")
+                    $("#buttondiv").empty()
+                    $("#myGrid").empty()
+
+                    $("#restart").on("click", function(){
+                        window.location.reload()
+                    })
+                }
+
+
+                
+                
+                
+            }
+
+            else {
+                return;
+            }
+
+        })
+
+
+
+
+        
+        
+
+
+    
+
+        
+
+     </script>
+
+    
+</html>
